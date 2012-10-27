@@ -65,6 +65,9 @@ class Installer extends LibraryInstaller implements InstallerInterface
         if ( isset( $extra['magento-force'] ) ) {
             $this->_isForced = (bool) $extra['magento-force'];
         }
+
+
+
     }
 
     /**
@@ -101,9 +104,7 @@ class Installer extends LibraryInstaller implements InstallerInterface
         $this->_source_dir = $this->vendorDir.DIRECTORY_SEPARATOR.$package->getName();
         $this->initializeVendorDir();
 
-        $strategy = $this->getDeployStrategy();
-        $strategy->setMappings($this->getParser()->getMappings());
-        $strategy->deploy();
+
     }
 
     /**
@@ -121,6 +122,18 @@ class Installer extends LibraryInstaller implements InstallerInterface
         $this->initializeVendorDir();
 
         $this->install($repo, $initial, $target);
+    }
+
+    public function isInstalled(InstalledRepositoryInterface $repo, PackageInterface $package) {
+        $this->_source_dir = $this->vendorDir.DIRECTORY_SEPARATOR.$package->getName();
+        $this->initializeVendorDir();
+        return parent::isInstalled( $repo, $package );
+    }
+
+    public function __destruct() {
+        $strategy = $this->getDeployStrategy();
+        $strategy->setMappings($this->getParser()->getMappings());
+        $strategy->deploy();
     }
 
     /**
